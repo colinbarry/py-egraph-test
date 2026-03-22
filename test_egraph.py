@@ -29,3 +29,11 @@ def test_add_expression_shares_children():
     id_add = eg.add(Add(Const(1), Const(2)))
     assert id_add != id_const1
     assert id_add != id_const2
+
+
+def test_merge():
+    eg = EGraph()
+    id_add = eg.add(Add(Const(2), Const(3)))
+    id_const = eg.add(Const(5))
+    id_merge = eg.merge(id_add, id_const)
+    assert eg.find(id_add) == eg.find(id_const)

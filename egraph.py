@@ -17,4 +17,10 @@ class EGraph:
             class_id = self._hashcons[key] = self._union_find.make_set()
             return class_id
 
+    def merge(self, id1, id2):
+        return self._union_find.merge(id1, id2)
+
+    def find(self, id):
+        return self._union_find.find(id)
+
 
