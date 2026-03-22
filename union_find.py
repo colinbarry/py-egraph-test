@@ -1,4 +1,5 @@
 class UnionFind:
+    """Disjoint set forest with path compression and union by rank."""
     def __init__(self):
         self._parents = []
         self._ranks = []
