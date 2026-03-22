@@ -8,6 +8,14 @@ class Node(ABC):
     def eval(self, context):
         pass
 
+    @abstractmethod
+    def key(self, children):
+        pass
+
+    @abstractmethod
+    def children(self):
+        pass
+
 
 @dataclass
 class Const(Node):
@@ -17,45 +25,13 @@ class Const(Node):
     def eval(self, context):
         return self.value
 
-
-@dataclass
-class Add(Node):
-    lhs: Node
-    rhs: Node
+    @override
+    def key(self, children):
+        return 'Const', self.value
 
     @override
-    def eval(self, context):
-        return self.lhs.eval(context) + self.rhs.eval(context)
-
-
-@dataclass
-class Subtract(Node):
-    lhs: Node
-    rhs: Node
-
-    @override
-    def eval(self, context):
-        return self.lhs.eval(context) - self.rhs.eval(context)
-
-
-@dataclass
-class Multiply(Node):
-    lhs: Node
-    rhs: Node
-
-    @override
-    def eval(self, context):
-        return self.lhs.eval(context) * self.rhs.eval(context)
-
-
-@dataclass
-class Divide(Node):
-    lhs: Node
-    rhs: Node
-
-    @override
-    def eval(self, context):
-        return self.lhs.eval(context) / self.rhs.eval(context)
+    def children(self):
+        return []
 
 
 @dataclass
@@ -65,4 +41,55 @@ class Var(Node):
     @override
     def eval(self, context):
         return context[self.symbol]
+
+    @override
+    def key(self, children):
+        return 'Var', self.symbol
+
+    @override
+    def children(self):
+        return []
+
+@dataclass
+class BinaryOp(Node):
+    lhs: Node
+    rhs: Node
+
+    @override
+    def key(self, children):
+        return type(self).__name__, *children
+
+    @override
+    def children(self):
+        return [self.lhs, self.rhs]
+
+
+@dataclass
+class Add(BinaryOp):
+    @override
+    def eval(self, context):
+        return self.lhs.eval(context) + self.rhs.eval(context)
+
+
+@dataclass
+class Subtract(BinaryOp):
+    @override
+    def eval(self, context):
+        return self.lhs.eval(context) - self.rhs.eval(context)
+
+
+@dataclass
+class Multiply(BinaryOp):
+    @override
+    def eval(self, context):
+        return self.lhs.eval(context) * self.rhs.eval(context)
+
+
+@dataclass
+class Divide(BinaryOp):
+    @override
+    def eval(self, context):
+        return self.lhs.eval(context) / self.rhs.eval(context)
+
+
 
