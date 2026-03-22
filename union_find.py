@@ -1,12 +1,10 @@
 class UnionFind:
     def __init__(self):
-        self._next_id = 0
         self._parents = []
         self._ranks = []
 
     def make_set(self):
-        val = self._next_id
-        self._next_id += 1
+        val = len(self._parents)
         self._parents.append(val)
         self._ranks.append(0)
         return val
